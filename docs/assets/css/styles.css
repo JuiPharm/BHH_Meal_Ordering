@@ -100,3 +100,35 @@ table.order-table th, table.order-table td {
 table.order-table th {
   background: #f5f5f5;
 }
+
+/* ===== Menu cards (เหมือนต้นฉบับ) ===== */
+.menu-card {
+  border: 1px solid #e6eefc;
+  border-radius: 14px;
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  cursor: pointer;
+  user-select: none;
+}
+.menu-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.10);
+  border-color: rgba(0,51,160,0.35);
+}
+.menu-card.selected {
+  border-color: #0033A0;
+  box-shadow: 0 0 0 3px rgba(0,51,160,0.18);
+}
+.menu-title {
+  font-weight: 700;
+}
+.item-img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+.fade-in {
+  animation: fadeInUp 0.6s ease-out;
+}

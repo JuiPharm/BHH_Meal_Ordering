@@ -47,30 +47,71 @@ export function mountOrder(root) {
           <label class="form-label">ประวัติแพ้ยา/อาหาร</label>
           <textarea class="form-control" id="allergy" rows="2"></textarea>
         </div>
-        <div class="mb-3">
+        <div class="mb-4">
           <label class="form-label required">เลือกเมนูอาหาร</label>
-          <div class="d-flex flex-wrap gap-3">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="menu" id="menu_tuna" value="tuna" />
-              <label class="form-check-label" for="menu_tuna">แซนวิชทูน่า</label>
+          <div class="row g-3" id="menuGrid">
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="card menu-card h-100" data-menu="tuna" tabindex="0">
+                <div class="card-body text-center">
+                  <img src="https://lh5.googleusercontent.com/d/1uTmKYLAg_IbRC5BHrWLPZoK5uoV9Zl8R" class="item-img mb-2" alt="แซนวิชทูน่า">
+                  <h6 class="menu-title">แซนวิชทูน่า</h6>
+                  <div class="form-check d-flex justify-content-center mt-2">
+                    <input class="form-check-input" type="radio" name="menu" id="menu_tuna" value="tuna" />
+                    <label class="form-check-label ms-2" for="menu_tuna">เลือกเมนูนี้</label>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="menu" id="menu_fish" value="fish" />
-              <label class="form-check-label" for="menu_fish">ข้าวต้มปลา</label>
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="card menu-card h-100" data-menu="fish" tabindex="0">
+                <div class="card-body text-center">
+                  <img src="https://lh5.googleusercontent.com/d/1Nodesn5nR89y6A5w2XuD40hfOhxP7txv" class="item-img mb-2" alt="ข้าวต้มปลา">
+                  <h6 class="menu-title">ข้าวต้มปลา</h6>
+                  <div class="form-check d-flex justify-content-center mt-2">
+                    <input class="form-check-input" type="radio" name="menu" id="menu_fish" value="fish" />
+                    <label class="form-check-label ms-2" for="menu_fish">เลือกเมนูนี้</label>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="menu" id="menu_chicken" value="chicken" />
-              <label class="form-check-label" for="menu_chicken">ข้าวต้มไก่</label>
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="card menu-card h-100" data-menu="chicken" tabindex="0">
+                <div class="card-body text-center">
+                  <img src="https://lh5.googleusercontent.com/d/1t28JyyYQVT5G_w0Oe8QtxI8skbSAVXaw" class="item-img mb-2" alt="ข้าวต้มไก่">
+                  <h6 class="menu-title">ข้าวต้มไก่</h6>
+                  <div class="form-check d-flex justify-content-center mt-2">
+                    <input class="form-check-input" type="radio" name="menu" id="menu_chicken" value="chicken" />
+                    <label class="form-check-label ms-2" for="menu_chicken">เลือกเมนูนี้</label>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="menu" id="menu_shrimp" value="shrimp" />
-              <label class="form-check-label" for="menu_shrimp">ข้าวต้มกุ้ง</label>
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="card menu-card h-100" data-menu="shrimp" tabindex="0">
+                <div class="card-body text-center">
+                  <img src="https://lh5.googleusercontent.com/d/1DHhY5cz81ONOID39tBUFrMcySAgCM_5I" class="item-img mb-2" alt="ข้าวต้มกุ้ง">
+                  <h6 class="menu-title">ข้าวต้มกุ้ง</h6>
+                  <div class="form-check d-flex justify-content-center mt-2">
+                    <input class="form-check-input" type="radio" name="menu" id="menu_shrimp" value="shrimp" />
+                    <label class="form-check-label ms-2" for="menu_shrimp">เลือกเมนูนี้</label>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="menu" id="menu_custom" value="custom" />
-              <label class="form-check-label" for="menu_custom">เมนูอื่นๆ</label>
+            <div class="col-12">
+              <div class="card menu-card" data-menu="custom" tabindex="0">
+                <div class="card-body">
+                  <div class="d-flex align-items-center flex-wrap gap-2">
+                    <div class="form-check me-1">
+                      <input class="form-check-input" type="radio" name="menu" id="menu_custom" value="custom" />
+                      <label class="form-check-label" for="menu_custom">ต้องการระบุเมนูอื่นๆ</label>
+                    </div>
+                    <input type="text" class="form-control" id="customName" placeholder="กรุณาระบุชื่อเมนู" style="max-width:340px" disabled />
+                  </div>
+                  <small class="text-muted">กรุณาเลือกเมนูที่ต้องการ</small>
+                </div>
+              </div>
             </div>
-            <input type="text" class="form-control" id="customName" placeholder="ระบุชื่อเมนู" style="max-width:200px;" disabled />
           </div>
         </div>
         <div class="mb-3">
@@ -118,9 +159,33 @@ export function mountOrder(root) {
   });
   // Prefill requester
   root.querySelector('#requester').value = session.user.name || '';
-  // Enable custom menu input
+
+  // ----- Menu cards UX (เหมือนต้นฉบับ: กดที่การ์ดเพื่อเลือกเมนู) -----
   const customInput = root.querySelector('#customName');
   const radios = root.querySelectorAll('input[name="menu"]');
+  const menuCards = root.querySelectorAll('.menu-card');
+
+  function updateMenuCardSelection(){
+    menuCards.forEach(card => {
+      const r = card.querySelector('input[name="menu"]');
+      card.classList.toggle('selected', !!(r && r.checked));
+    });
+  }
+
+  function wireCardClick(){
+    menuCards.forEach(card => {
+      card.addEventListener('click', (ev) => {
+        const tag = String((ev.target && ev.target.tagName) || '').toLowerCase();
+        if (['input','label','textarea','select','button','a'].includes(tag)) return;
+        const radio = card.querySelector('input[name="menu"]');
+        if (radio){
+          radio.checked = true;
+          radio.dispatchEvent(new Event('change', {bubbles:true}));
+        }
+      });
+    });
+  }
+
   radios.forEach(r => {
     r.addEventListener('change', () => {
       if (r.value === 'custom' && r.checked) {
@@ -130,8 +195,12 @@ export function mountOrder(root) {
         customInput.disabled = true;
         customInput.value = '';
       }
+      updateMenuCardSelection();
     });
   });
+
+  wireCardClick();
+  updateMenuCardSelection();
   // Form submit
   root.querySelector('#orderForm').addEventListener('submit', async (e) => {
     e.preventDefault();
