@@ -20,8 +20,9 @@ export function mountOrder(root) {
       </div>
     </nav>
     <div class="container my-4">
-      <h4 class="mb-3">ฟอร์มสั่งอาหารผู้ป่วย</h4>
-      <form id="orderForm" class="mb-4">
+      <div class="form-card">
+        <h4 class="mb-4">ฟอร์มสั่งอาหารผู้ป่วย</h4>
+        <form id="orderForm" class="mb-3">
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label required">HN</label>
@@ -89,7 +90,8 @@ export function mountOrder(root) {
           </div>
         </div>
         <button type="submit" class="btn btn-primary">บันทึกคำสั่งซื้อ</button>
-      </form>
+        </form>
+      </div>
     </div>
   `;
   root.appendChild(tpl);
