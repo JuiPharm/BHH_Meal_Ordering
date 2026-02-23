@@ -1,3 +1,65 @@
 
 :root { --bh-blue:#0033A0; --bh-red:#C8102E; }
 #app { min-height: 100vh; }
+
+/* ===== Hospital theme (Login) ===== */
+body{
+  min-height:100vh;
+  background: linear-gradient(135deg, #0033A0 0%, #0066cc 45%, #e6f2ff 100%);
+  background-attachment: fixed;
+}
+.login-wrap{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px 12px;
+}
+.login-card{
+  width: 100%;
+  max-width: 420px;
+  border-radius: 18px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow: 0 20px 60px rgba(0,0,0,.22);
+  animation: fadeInUp .75s ease-out;
+}
+.login-header{
+  background: linear-gradient(135deg, rgba(0,51,160,1) 0%, rgba(200,16,46,1) 100%);
+  color:#fff;
+  padding: 22px 22px 18px;
+  text-align:center;
+}
+.login-logo{
+  display:block;
+  margin: 0 auto 10px;
+  max-height: 72px;
+  width:auto;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,.25));
+}
+.login-body{ padding: 18px 22px 22px; }
+.btn-login{
+  background:#0033A0;
+  border:none;
+  padding: 12px 14px;
+  border-radius: 12px;
+  transition: .2s ease;
+}
+.btn-login:hover{ background:#001f66; transform: translateY(-1px); }
+.btn-login:disabled{ opacity:.85; transform:none; }
+.loading{
+  display:none;
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255,255,255,.95);
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  vertical-align: -3px;
+  margin-right: 8px;
+}
+@keyframes spin { to{ transform: rotate(360deg);} }
+@keyframes fadeInUp {
+  from { opacity:0; transform: translateY(24px); }
+  to { opacity:1; transform: translateY(0); }
+}

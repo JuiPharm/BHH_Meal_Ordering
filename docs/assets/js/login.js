@@ -5,28 +5,44 @@ export function mountLogin(root) {
   const tpl = document.getElementById("tpl-login");
   root.appendChild(tpl.content.cloneNode(true));
 
-  // Find form elements (from original template)
-  const btn = root.querySelector("#btnLogin") || root.querySelector("button[type=submit]") || root.querySelector("button");
-  const userEl = root.querySelector("#username") || root.querySelector("input[type=text]");
-  const passEl = root.querySelector("#password") || root.querySelector("input[type=password]");
+  const form = root.querySelector("#loginForm");
+  const btn = root.querySelector("#btnLogin");
+  const userEl = root.querySelector("#username");
+  const passEl = root.querySelector("#password");
+  const rememberEl = root.querySelector("#rememberMe");
+  const spin = root.querySelector("#spin");
+  const btnText = root.querySelector("#btnText");
 
-  // If original template has a form, prevent default
-  const form = root.querySelector("form");
-  if (form) form.addEventListener("submit", (e) => e.preventDefault());
+  // restore remembered username
+  try{
+    const remembered = localStorage.getItem("bh_meal_remembered_username");
+    if (remembered && userEl) userEl.value = remembered;
+  }catch(_){}
 
   async function doLogin() {
     const username = (userEl?.value || "").trim();
     const password = (passEl?.value || "").trim();
+    const remember = !!rememberEl?.checked;
+
     if (!username || !password) {
       Swal.fire({ icon: "warning", title: "กรุณากรอก Username และ Password" });
       return;
     }
 
     try {
-      btn && (btn.disabled = true);
+      btn.disabled = true;
+      if (spin) spin.style.display = "inline-block";
+      if (btnText) btnText.textContent = "กำลังเข้าสู่ระบบ...";
+
       const r = await apiPost("auth.login", { username, password });
-      // r.data: {token, user:{name,department,role}}
+
+      try{
+        if (remember) localStorage.setItem("bh_meal_remembered_username", username);
+        else localStorage.removeItem("bh_meal_remembered_username");
+      }catch(_){}
+
       setSession({ token: r.data.token, user: r.data.user, role: r.data.user.role });
+
       Swal.fire({ icon: "success", title: "เข้าสู่ระบบสำเร็จ", timer: 900, showConfirmButton: false })
         .then(() => {
           window.location.hash = (r.data.user.role === "APPROVED") ? "#/approved" : "#/order";
@@ -34,9 +50,14 @@ export function mountLogin(root) {
     } catch (e) {
       Swal.fire({ icon: "error", title: "เข้าสู่ระบบไม่สำเร็จ", text: e.message });
     } finally {
-      btn && (btn.disabled = false);
+      btn.disabled = false;
+      if (spin) spin.style.display = "none";
+      if (btnText) btnText.textContent = "เข้าสู่ระบบ";
     }
   }
 
-  if (btn) btn.addEventListener("click", doLogin);
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    doLogin();
+  });
 }

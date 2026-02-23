@@ -29,95 +29,51 @@
 
 <!-- Templates -->
 <template id="tpl-login">
-<div class="container">
-    <div class="login-card">
-      <div class="login-header">
-        <div class="hospital-logo"><i class="bi bi-hospital-fill"></i></div>
-        <h4 class="mb-0">ระบบสั่งอาหารผู้ป่วย</h4>
-        <p class="mb-0 opacity-75">Bangkok Hospital</p>
-      </div>
-      <div class="login-body">
-        <form id="loginForm">
-          <div class="mb-3">
-            <label class="form-label">Username</label>
-            <div class="input-group">
-              <span class="input-group-text"><i class="bi bi-person"></i></span>
-              <input type="text" class="form-control" id="username" required>
-            </div>
-          </div>
-          <div class="mb-4">
-            <label class="form-label">Password</label>
-            <div class="input-group">
-              <span class="input-group-text"><i class="bi bi-lock"></i></span>
-              <input type="password" class="form-control" id="password" required>
-            </div>
-          </div>
-          <button type="submit" class="btn btn-login text-white">
-            <span class="loading" id="spin"></span><span id="btnText">เข้าสู่ระบบ</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-header">
+        <img class="login-logo" src="https://lh5.googleusercontent.com/d/1r7PM1ogHIbxskvcauVIYaQOfSHXWGncO" alt="Bangkok Hospital Logo">
+        <h4 class="mb-0 fw-bold">ระบบสั่งอาหารผู้ป่วย</h4>
+        <div class="opacity-75">Bangkok Hospital</div>
+      </div>
 
-<script>
-const $ = (id)=>document.getElementById(id);
+      <div class="login-body">
+        <form id="loginForm" autocomplete="on">
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              <input type="text" class="form-control form-control-lg" id="username" required autofocus>
+            </div>
+          </div>
 
-document.getElementById('loginForm').addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const u = $('username').value.trim();
-  const p = $('password').value.trim();
-  if (!u || !p) {
-    return Swal.fire({icon:'warning', title:'กรุณากรอกให้ครบ'});
-  }
+          <div class="mb-2">
+            <label class="form-label">Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-lock"></i></span>
+              <input type="password" class="form-control form-control-lg" id="password" required>
+            </div>
+          </div>
 
-  $('spin').style.display='inline-block';
-  $('btnText').textContent='กำลังเข้าสู่ระบบ...';
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="rememberMe" checked>
+              <label class="form-check-label" for="rememberMe">จดจำการเข้าสู่ระบบ</label>
+            </div>
+            <span class="text-muted small">v1</span>
+          </div>
 
-  const rs = await new Promise((resolve)=>{
-    google.script.run
-      .withSuccessHandler(resolve)
-      .withFailureHandler(err => {
-        resolve({status:'error', message: 'เกิดข้อผิดพลาดจากระบบ: ' + String(err)});
-      })
-      .checkLogin(u,p);
-  });
+          <button type="submit" id="btnLogin" class="btn btn-login text-white w-100 btn-lg">
+            <span class="loading" id="spin"></span><span id="btnText">เข้าสู่ระบบ</span>
+          </button>
 
-  $('spin').style.display='none';
-  $('btnText').textContent='เข้าสู่ระบบ';
-
-  if (rs && rs.status==='success'){
-    localStorage.setItem('userInfo', JSON.stringify(rs.user));
-    Swal.fire({
-      icon:'success',
-      title:'ยินดีต้อนรับ '+(rs.user.name||''),
-      timer:1100,
-      showConfirmButton:false
-    }).then(()=>{ window.location.href = '<?= getURL() ?>?page=index'; });
-  }else{
-    Swal.fire({
-      icon:'error',
-      title:'เข้าสู่ระบบไม่สำเร็จ',
-      text:(rs && rs.message)||'กรุณาตรวจสอบอีกครั้ง'
-    });
-  }
-});
-
-// ถ้าเคยล็อกอินไว้แล้ว ไปหน้า index เลย
-document.addEventListener('DOMContentLoaded', ()=>{
-  const info = localStorage.getItem('userInfo');
-  if (info){
-    try{
-      const user = JSON.parse(info);
-      if (user && user.name) {
-        window.location.href = '<?= getURL() ?>?page=index';
-      }
-    }catch(e){
-      localStorage.removeItem('userInfo');
-    }
-  }
-});
-</script>
+          <div class="text-center text-muted small mt-3" style="opacity:.8">
+            © Bangkok Hospital • Meal Ordering
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </template>
 
 <template id="tpl-order">
@@ -1116,7 +1072,7 @@ function downloadSlip(btn){
   // === Config ===
   // ใส่ URL ของ Apps Script Web App (ลงท้ายด้วย /exec)
   window.APP_CONFIG = {
-    API_BASE: "https://script.google.com/macros/s/AKfycbzfdrL8cCJAEiTOyoOCtxjaho4jX4Af_LfP1xtgug19vYwylL_0fmHD7tT1tfPttuZh/exec"
+    API_BASE: "PASTE_YOUR_GAS_WEBAPP_EXEC_URL_HERE"
   };
 </script>
 
