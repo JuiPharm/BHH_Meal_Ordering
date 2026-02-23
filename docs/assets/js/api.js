@@ -1,43 +1,29 @@
-// api.js
-export async function apiPost(action, data = {}, token = null) {
-  const url = window.APP_CONFIG.API_BASE;
-  if (!url || !/^https?:\/\//i.test(url)) {
-    throw new Error("ตั้งค่า window.APP_CONFIG.API_BASE ให้เป็น URL เต็ม เช่น https://xxx.workers.dev");
+// API wrapper for the Meal Ordering frontend.
+//
+// All calls return a promise that resolves with the `data` property from
+// the backend response. On error, the promise rejects with an Error.
+
+export async function apiCall(action, params = {}, token = null) {
+  const base = (window.APP_CONFIG && window.APP_CONFIG.API_BASE) || '';
+  if (!base) {
+    throw new Error('API_BASE is not configured');
   }
-
-  // ✅ Simple request: no preflight
-  // - Content-Type: text/plain
-  // - no Authorization header
-  // - put token in body
-  const payload = { action, ...data };
+  const payload = { action, ...params };
   if (token) payload.token = token;
-
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain;charset=UTF-8" },
-    body: JSON.stringify(payload),
+  const res = await fetch(base, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+    body: JSON.stringify(payload)
   });
-
   const text = await res.text();
   let json;
-  try { json = JSON.parse(text); }
-  catch {
-    throw new Error("API ตอบกลับไม่ใช่ JSON: " + text.slice(0, 300));
+  try {
+    json = JSON.parse(text);
+  } catch (ex) {
+    throw new Error('API returned non-JSON response: ' + text);
   }
-
-  if (!res.ok || json.ok === false) {
-    throw new Error(json?.error || `HTTP ${res.status}`);
+  if (!json.ok) {
+    throw new Error(json.error || 'API error');
   }
-  return json;
-}
-
-export function getSession() {
-  try { return JSON.parse(localStorage.getItem("bh_meal_session") || "null"); }
-  catch { return null; }
-}
-export function setSession(sess) {
-  localStorage.setItem("bh_meal_session", JSON.stringify(sess));
-}
-export function clearSession() {
-  localStorage.removeItem("bh_meal_session");
+  return json.data;
 }

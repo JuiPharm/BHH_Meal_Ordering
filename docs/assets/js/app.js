@@ -1,43 +1,51 @@
-// app.js
-import { mountLogin } from "./login.js";
-import { mountOrder } from "./order.js";
-import { mountLogout } from "./logout.js";
-import { mountApproved } from "./approved.js";
-import { installGasShim } from "./gas-shim.js";
-import { getSession } from "./api.js";
+import { mountLogin } from './login.js';
+import { mountOrder } from './order.js';
+import { mountApproved } from './approved.js';
 
-const routes = {
-  "#/login": mountLogin,
-  "#/order": mountOrder,
-  "#/logout": mountLogout,
-  "#/approved": mountApproved,
-};
-
-function render() {
-  const hash = window.location.hash || "#/login";
-  const mountFn = routes[hash] || routes["#/login"];
-  const app = document.getElementById("app");
-  app.innerHTML = "";
-  mountFn(app);
-
-  // basic guard
-  const sess = getSession();
-  if ((hash === "#/order" || hash === "#/approved") && !sess?.token) {
-    window.location.hash = "#/login";
+// Simple SPA router based on the hash portion of the URL.
+function router() {
+  const app = document.getElementById('app');
+  // Clear current content
+  while (app.firstChild) app.removeChild(app.firstChild);
+  const hash = window.location.hash || '#/login';
+  const session = getSession();
+  if (hash.startsWith('#/login')) {
+    mountLogin(app);
+    return;
   }
+  // If no session, redirect to login
+  if (!session) {
+    window.location.hash = '#/login';
+    return;
+  }
+  if (hash.startsWith('#/order')) {
+    mountOrder(app);
+    return;
+  }
+  if (hash.startsWith('#/approved')) {
+    mountApproved(app);
+    return;
+  }
+  // Default route
+  window.location.hash = '#/login';
 }
 
-window.addEventListener("hashchange", render);
-window.addEventListener("load", () => {
-  installGasShim();
-  const sess = getSession();
-  if (sess?.token) {
-    // remember last route
-    if (!window.location.hash || window.location.hash === "#/login") {
-      window.location.hash = sess.role === "APPROVED" ? "#/approved" : "#/order";
-    }
-  } else {
-    if (!window.location.hash) window.location.hash = "#/login";
+// Session helpers: store token and user in localStorage
+export function setSession(sess) {
+  localStorage.setItem('meal_session', JSON.stringify(sess));
+}
+export function getSession() {
+  try {
+    const raw = localStorage.getItem('meal_session');
+    return raw ? JSON.parse(raw) : null;
+  } catch (ex) {
+    return null;
   }
-  render();
-});
+}
+export function clearSession() {
+  localStorage.removeItem('meal_session');
+}
+
+// Initialize router
+window.addEventListener('hashchange', router);
+document.addEventListener('DOMContentLoaded', router);

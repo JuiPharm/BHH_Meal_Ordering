@@ -1,63 +1,71 @@
-// login.js
-import { apiPost, setSession } from "./api.js";
+import { apiCall } from './api.js';
+import { setSession } from './app.js';
 
+// Render the login page into the given root element.
 export function mountLogin(root) {
-  const tpl = document.getElementById("tpl-login");
-  root.appendChild(tpl.content.cloneNode(true));
+  const tpl = document.createElement('div');
+  tpl.innerHTML = `
+    <div class="login-card">
+      <div class="p-4 text-center bg-primary text-white">
+        <img src="https://lh5.googleusercontent.com/d/1r7PM1ogHIbxskvcauVIYaQOfSHXWGncO" style="max-height:70px;" class="mb-2" />
+        <h4 class="mb-1">ระบบสั่งอาหารผู้ป่วย</h4>
+        <p class="mb-0 opacity-75">Bangkok Hospital</p>
+      </div>
+      <div class="p-4">
+        <form id="loginForm">
+          <div class="mb-3">
+            <label class="form-label required">Username</label>
+            <input type="text" class="form-control" id="username" required autofocus />
+          </div>
+          <div class="mb-3">
+            <label class="form-label required">Password</label>
+            <input type="password" class="form-control" id="password" required />
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="rememberMe" />
+            <label class="form-check-label" for="rememberMe">จำฉันไว้</label>
+          </div>
+          <button type="submit" class="btn btn-login w-100">
+            <span class="loading" id="spin"></span>
+            <span id="btnText">เข้าสู่ระบบ</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  `;
+  root.appendChild(tpl);
+  const form = root.querySelector('#loginForm');
+  const spin = root.querySelector('#spin');
+  const btnText = root.querySelector('#btnText');
 
-  const form = root.querySelector("#loginForm");
-  const btn = root.querySelector("#btnLogin");
-  const userEl = root.querySelector("#username");
-  const passEl = root.querySelector("#password");
-  const rememberEl = root.querySelector("#rememberMe");
-  const spin = root.querySelector("#spin");
-  const btnText = root.querySelector("#btnText");
-
-  // restore remembered username
-  try{
-    const remembered = localStorage.getItem("bh_meal_remembered_username");
-    if (remembered && userEl) userEl.value = remembered;
-  }catch(_){}
-
-  async function doLogin() {
-    const username = (userEl?.value || "").trim();
-    const password = (passEl?.value || "").trim();
-    const remember = !!rememberEl?.checked;
-
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = root.querySelector('#username').value.trim();
+    const password = root.querySelector('#password').value.trim();
+    const remember = root.querySelector('#rememberMe').checked;
     if (!username || !password) {
-      Swal.fire({ icon: "warning", title: "กรุณากรอก Username และ Password" });
+      alert('กรุณากรอก Username และ Password');
       return;
     }
-
+    spin.style.display = 'inline-block';
+    btnText.textContent = 'กำลังเข้าสู่ระบบ...';
     try {
-      btn.disabled = true;
-      if (spin) spin.style.display = "inline-block";
-      if (btnText) btnText.textContent = "กำลังเข้าสู่ระบบ...";
-
-      const r = await apiPost("auth.login", { username, password });
-
-      try{
-        if (remember) localStorage.setItem("bh_meal_remembered_username", username);
-        else localStorage.removeItem("bh_meal_remembered_username");
-      }catch(_){}
-
-      setSession({ token: r.data.token, user: r.data.user, role: r.data.user.role });
-
-      Swal.fire({ icon: "success", title: "เข้าสู่ระบบสำเร็จ", timer: 900, showConfirmButton: false })
-        .then(() => {
-          window.location.hash = (r.data.user.role === "APPROVED") ? "#/approved" : "#/order";
-        });
-    } catch (e) {
-      Swal.fire({ icon: "error", title: "เข้าสู่ระบบไม่สำเร็จ", text: e.message });
+      const data = await apiCall('auth.login', { username, password });
+      // Save session
+      const session = { token: data.token, user: data.user };
+      setSession(session);
+      // Redirect based on role
+      const role = (data.user.role || '').toUpperCase();
+      if (role.includes('APPROVED')) {
+        window.location.hash = '#/approved';
+      } else {
+        window.location.hash = '#/order';
+      }
+    } catch (err) {
+      alert(err.message || 'เข้าสู่ระบบไม่สำเร็จ');
     } finally {
-      btn.disabled = false;
-      if (spin) spin.style.display = "none";
-      if (btnText) btnText.textContent = "เข้าสู่ระบบ";
+      spin.style.display = 'none';
+      btnText.textContent = 'เข้าสู่ระบบ';
     }
-  }
-
-  form?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    doLogin();
   });
 }

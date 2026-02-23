@@ -1,0 +1,79 @@
+/* Core styles for the Meal Ordering single page application */
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0033A0 0%, #0066cc 40%, #e6f2ff 100%);
+  background-attachment: fixed;
+  font-family: Arial, sans-serif;
+}
+
+.login-card {
+  max-width: 420px;
+  margin: 100px auto;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.btn-login {
+  background: #0033A0;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  color: #fff;
+  transition: 0.3s;
+}
+
+.btn-login:hover {
+  background: #001f66;
+}
+
+.loading {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 3px solid #fff;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Required field indicator */
+.required::after {
+  content: '*';
+  color: red;
+  margin-left: 2px;
+}
+
+/* Simple table styles */
+table.order-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+table.order-table th, table.order-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+table.order-table th {
+  background: #f5f5f5;
+}
