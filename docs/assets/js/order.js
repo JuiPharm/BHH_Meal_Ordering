@@ -1,6 +1,21 @@
 import { apiCall } from './api.js';
 import { getSession } from './app.js';
+function showSavingOverlay(text = 'กำลังบันทึก...') {
+  const el = document.createElement('div');
+  el.className = 'saving-overlay';
+  el.innerHTML = `
+    <div class="saving-box">
+      <div class="saving-spinner"></div>
+      <div class="fw-bold">${text}</div>
+      <div class="text-muted small mt-1">กรุณารอสักครู่</div>
+    </div>
+  `;
+  document.body.appendChild(el);
 
+  return function hide() {
+    try { el.remove(); } catch(e){}
+  };
+}
 // Render the order form page into the given root element.
 export function mountOrder(root) {
   const session = getSession();
